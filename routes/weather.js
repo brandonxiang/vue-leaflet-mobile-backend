@@ -1,20 +1,21 @@
-var express = require('express');
-var router = express.Router();
+const router = require('koa-router')()
 var axios = require('axios');
 
 var { weatherhost, WEATHERKEY } = require('./api');
 
-router.get('/now', function (req, res, next) {
+router.prefix('/weather')
+
+router.get('/now', (ctx, next) => {
   var params = Object.assign({}, req.query, { key: WEATHERKEY })
   axios.get(`${weatherhost}/now.json`, { params }).then(function (json) {
-    res.send(json.data)
+     ctx.body = json.data;
   })
 });
 
-router.get('/future', function (req, res, next) {
+router.get('/future',  (ctx, next) => {
   var params = Object.assign({}, req.query, { key: WEATHERKEY })
   axios.get(`${weatherhost}/daily.json`, { params }).then(function (json) {
-    res.send(json.data)
+    ctx.body = json.data;
   })
 });
 

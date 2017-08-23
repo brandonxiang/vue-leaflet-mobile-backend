@@ -10,81 +10,27 @@ var pem = require('pem');
 var https = require('https');
 
 
-pem.createCertificate({ day: 1, selfSigned: true }, function (err, keys) {
-  /**
-   * Get port from environment and store in Express.
-   */
+var getPem = function (options) {
+  return new Promise(function (resolve, reject) {
+    pem.createCertificate(options, function (err, key) {
+      if (err) {
+        reject(err);
+      }
+      resolve(key);
+    })
+  })
+}
 
+
+getPem({ day: 1, selfSigned: true }).then(function (keys) {
   var port = normalizePort(process.env.PORT || '3000');
-  app.set('port', port);
-
-  /**
-   * Create HTTP server.
-   */
-
-  var server = https.createServer({ key: keys.serviceKey, cert: keys.certificate }, app);
-
-  /**
-   * Listen on provided port, on all network interfaces.
-   */
-
+  var server = https.createServer({ key: keys.serviceKey, cert: keys.certificate }, app.callback());
   server.listen(port);
   server.on('error', onError);
   server.on('listening', onListening);
-
-
-
   /**
-   * Normalize a port into a number, string, or false.
-   */
-
-  function normalizePort(val) {
-    var port = parseInt(val, 10);
-
-    if (isNaN(port)) {
-      // named pipe
-      return val;
-    }
-
-    if (port >= 0) {
-      // port number
-      return port;
-    }
-
-    return false;
-  }
-
-  /**
-   * Event listener for HTTP server "error" event.
-   */
-
-  function onError(error) {
-    if (error.syscall !== 'listen') {
-      throw error;
-    }
-
-    var bind = typeof port === 'string'
-      ? 'Pipe ' + port
-      : 'Port ' + port;
-
-    // handle specific listen errors with friendly messages
-    switch (error.code) {
-      case 'EACCES':
-        console.error(bind + ' requires elevated privileges');
-        process.exit(1);
-        break;
-      case 'EADDRINUSE':
-        console.error(bind + ' is already in use');
-        process.exit(1);
-        break;
-      default:
-        throw error;
-    }
-  }
-
-  /**
-   * Event listener for HTTP server "listening" event.
-   */
+ * Event listener for HTTP server "listening" event.
+ */
 
   function onListening() {
     var addr = server.address();
@@ -93,5 +39,57 @@ pem.createCertificate({ day: 1, selfSigned: true }, function (err, keys) {
       : 'port ' + addr.port;
     debug('Listening on ' + bind);
   }
-
 })
+
+
+
+
+/**
+ * Normalize a port into a number, string, or false.
+ */
+
+function normalizePort(val) {
+  var port = parseInt(val, 10);
+
+  if (isNaN(port)) {
+    // named pipe
+    return val;
+  }
+
+  if (port >= 0) {
+    // port number
+    return port;
+  }
+
+  return false;
+}
+
+/**
+ * Event listener for HTTP server "error" event.
+ */
+
+function onError(error) {
+  if (error.syscall !== 'listen') {
+    throw error;
+  }
+
+  var bind = typeof port === 'string'
+    ? 'Pipe ' + port
+    : 'Port ' + port;
+
+  // handle specific listen errors with friendly messages
+  switch (error.code) {
+    case 'EACCES':
+      console.error(bind + ' requires elevated privileges');
+      process.exit(1);
+      break;
+    case 'EADDRINUSE':
+      console.error(bind + ' is already in use');
+      process.exit(1);
+      break;
+    default:
+      throw error;
+  }
+}
+
+
