@@ -10,6 +10,6 @@ before_install:
 after_success:
   - npm prune --production  # 删除devDependencies
   - tar -jcf leaflet-server.tar.bz2 *    # 打包并压缩代码
-  - scp leaflet-server.tar.bz2 root@139.199.185.23:~/  # 复制到生产服务器上
-  - ssh root@139.199.185.23 'cd brandon && mkdir -p leaflet-server && tar -jxf leaflet-server.tar.bz2 -C leaflet-server'   # 解压
-  - ssh root@139.199.185.23 'cd leaflet-server'  # 重启pm2
+  - scp leaflet-server.tar.bz2 root@139.199.185.23:~/ -p brandon  # 复制到生产服务器上
+  - ssh root@139.199.185.23 -p brandon 'cd brandon && mkdir -p leaflet-server && tar -jxf leaflet-server.tar.bz2 -C leaflet-server'   # 解压
+  - ssh root@139.199.185.23 -p brandon 'cd leaflet-server'  # 重启pm2
