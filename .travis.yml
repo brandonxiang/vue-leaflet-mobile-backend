@@ -1,15 +1,16 @@
 language: node_js
 node_js:
-  - '8.2.1'
+- 8.2.1
 before_install:
-  - openssl aes-256-cbc -K $encrypted_1a6b6737b685_key -iv $encrypted_1a6b6737b685_iv
-    -in id_rsa.enc -out ~/.ssh/id_rsa -d
-  #
-  - chmod 600 ~/.ssh/id_rsa
-  - echo -e "Host 139.199.185.23\n\tStrictHostKeyChecking no\n" >> ~/.ssh/config
+- openssl aes-256-cbc -K $encrypted_1a6b6737b685_key -iv $encrypted_1a6b6737b685_iv
+  -in id_rsa.enc -out ~/.ssh/id_rsa -d
+
+- chmod 600 ~/.ssh/id_rsa
+- echo -e "Host 139.199.185.23\n\tStrictHostKeyChecking no\n" >> ~/.ssh/config
 after_success:
-  - npm prune --production  # 删除devDependencies
-  - tar -jcf leaflet-server.tar.bz2 *    # 打包并压缩代码
-  - scp leaflet-server.tar.bz2 brandon@139.199.185.23:~/brandon  # 复制到生产服务器上
-  - ssh brandon@139.199.185.23 'mkdir -p leaflet-server && tar -jxf leaflet-server.tar.bz2 -C leaflet-server'   # 解压
-  - ssh brandon@139.199.185.23 'cd leaflet-server && pm2 restart leaflet-server'  # 重启pm2
+- npm prune --production
+- tar -jcf leaflet-server.tar.bz2 *
+- scp leaflet-server.tar.bz2 brandon@139.199.185.23:~/brandon
+- ssh brandon@139.199.185.23 'mkdir -p leaflet-server && tar -jxf leaflet-server.tar.bz2
+  -C leaflet-server'
+- ssh brandon@139.199.185.23 'cd leaflet-server && pm2 restart leaflet-server'
