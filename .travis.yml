@@ -10,7 +10,7 @@ before_install:
 after_success:
 - npm prune --production
 - tar -jcf leaflet-server.tar.bz2 *
-- scp leaflet-server.tar.bz2 brandon@139.199.185.23:~/brandon
+- scp leaflet-server.tar.bz2 brandon@139.199.185.23:~/
 - ssh brandon@139.199.185.23 'mkdir -p leaflet-server && tar -jxf leaflet-server.tar.bz2
   -C leaflet-server'
 - ssh brandon@139.199.185.23 'cd leaflet-server && pm2 restart leaflet-server'
