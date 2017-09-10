@@ -6,8 +6,7 @@
     "start": "node bin/www",
     "dev": "./node_modules/.bin/nodemon bin/www",
     "prd": "pm2 start bin/www",
-    "spider": "node ./middle/spider.js",
-    "test": "npm start && mocha"
+    "spider": "node ./middle/spider.js"
   },
   "dependencies": {
     "axios": "^0.16.1",
